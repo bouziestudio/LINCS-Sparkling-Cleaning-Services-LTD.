@@ -1,0 +1,6 @@
+{
+  "name": "LINCS Sparkling Cleaning Services",
+  "description": "Professional commercial, office, carpet, and industrial cleaning services based in Chertsey, Surrey. Contact LINCS for sparkling, reliable, and insured cleaning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
