@@ -3,6 +3,7 @@ import { ServiceItem, Testimonial } from '../types';
 export const COMPANY_INFO = {
   name: 'LINCS Sparkling Cleaning Services Ltd',
   shortName: 'LINCS Sparkling Cleaning',
+  logoUrl: 'https://photos.fife.usercontent.google.com/pw/AP1GczMhqapbu5qN8JIZ5KzKlChxqip_NRnQmtp5PXvRuOxEJTiq-Zexkj2d=w1683-h1026-s-no-gm?authuser=0',
   phone: '+0749-070-5078',
   phoneDisplay: '+0749-070-5078',
   phoneTel: '+447490705078',
