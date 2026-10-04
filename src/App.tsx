@@ -13,16 +13,14 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { QuoteModal } from './components/QuoteModal';
 import { SocialModal } from './components/SocialModal';
-import { DownloadModal } from './components/DownloadModal';
 import { COMPANY_INFO } from './data/cleaningData';
-import { Phone, Sparkles, Download } from 'lucide-react';
+import { Phone, Sparkles } from 'lucide-react';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageId>('home');
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [quoteServiceId, setQuoteServiceId] = useState<string | undefined>(undefined);
   const [socialModalPlatform, setSocialModalPlatform] = useState<'instagram' | 'tiktok' | null>(null);
-  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
 
   // Sync hash if present or default to home
   useEffect(() => {
@@ -60,7 +58,6 @@ export default function App() {
         currentPage={currentPage}
         onNavigate={handleNavigate}
         onOpenQuote={() => handleOpenQuote()}
-        onOpenDownload={() => setIsDownloadOpen(true)}
       />
 
       {/* Main Page Content */}
@@ -94,16 +91,6 @@ export default function App() {
 
       {/* Floating Action Pill for Mobile & Quick Dial */}
       <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
-        <button
-          onClick={() => setIsDownloadOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2.5 rounded-full bg-neutral-900/95 backdrop-blur-md border border-neutral-700 hover:border-[#9fe81d] text-neutral-300 hover:text-white font-mono font-bold text-xs shadow-2xl transition-all cursor-pointer active:scale-95"
-          aria-label="Download Website Files"
-          title="Download Website Files (.ZIP)"
-        >
-          <Download className="w-3.5 h-3.5 text-[#9fe81d]" />
-          <span className="hidden md:inline">Download</span>
-        </button>
-
         <a
           href={`tel:${COMPANY_INFO.phoneTel}`}
           className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-neutral-900/95 backdrop-blur-md border border-[#9fe81d]/50 text-white font-mono font-bold text-xs shadow-2xl hover:border-[#9fe81d] transition-all"
@@ -128,7 +115,6 @@ export default function App() {
       <Footer
         onNavigate={handleNavigate}
         onOpenSocialModal={handleOpenSocial}
-        onOpenDownload={() => setIsDownloadOpen(true)}
       />
 
       {/* Modals */}
@@ -142,11 +128,6 @@ export default function App() {
         isOpen={!!socialModalPlatform}
         platform={socialModalPlatform}
         onClose={() => setSocialModalPlatform(null)}
-      />
-
-      <DownloadModal
-        isOpen={isDownloadOpen}
-        onClose={() => setIsDownloadOpen(false)}
       />
     </div>
   );

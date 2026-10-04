@@ -2,20 +2,18 @@ import React, { useState } from 'react';
 import { PageId } from '../types';
 import { Logo } from './Logo';
 import { COMPANY_INFO } from '../data/cleaningData';
-import { Phone, Menu, X, ArrowRight, Sparkles, Download } from 'lucide-react';
+import { Phone, Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 
 interface HeaderProps {
   currentPage: PageId;
   onNavigate: (page: PageId) => void;
   onOpenQuote: () => void;
-  onOpenDownload?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   currentPage,
   onNavigate,
   onOpenQuote,
-  onOpenDownload,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -78,16 +76,6 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Zone 3: 1-2 Primary Actions */}
           <div className="hidden lg:flex items-center space-x-3">
-            {onOpenDownload && (
-              <button
-                onClick={onOpenDownload}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold uppercase tracking-wider text-neutral-300 hover:text-white bg-neutral-900/90 hover:bg-neutral-800 border border-neutral-700/80 hover:border-[#9fe81d] rounded-lg transition-all cursor-pointer shadow-sm active:scale-95"
-                title="Download Website Package (.ZIP)"
-              >
-                <Download className="w-3.5 h-3.5 text-[#9fe81d]" />
-                <span>Download Site</span>
-              </button>
-            )}
 
             <a
               href={`tel:${COMPANY_INFO.phoneTel}`}
@@ -151,18 +139,6 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div className="pt-3 border-t border-neutral-800 flex flex-col gap-2">
-            {onOpenDownload && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenDownload();
-                }}
-                className="w-full py-2.5 px-4 rounded-lg bg-neutral-900 border border-neutral-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:border-[#9fe81d]"
-              >
-                <Download className="w-4 h-4 text-[#9fe81d]" />
-                <span>Download Website Files (.ZIP)</span>
-              </button>
-            )}
 
             <a
               href={`tel:${COMPANY_INFO.phoneTel}`}
