@@ -1,11 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0B0F0B" />
-  <!-- Broom Handle -->
-  <path d="M 18 45 L 34 16 C 34.5 15 36 15 36.5 16 L 38 17 C 38.5 18 38 19 37.5 20 L 21 48 Z" fill="#FFFFFF" />
-  <!-- Broom Bristles -->
-  <path d="M 18 45 C 23 45.5, 30 47.5, 32 51 C 33 53.5, 32 56, 29 57.5 C 26.5 58.5, 25 55.5, 24 54.5 C 23 56, 22 58.5, 19 59 C 17 59.5, 16 57, 15 55.5 C 13.5 57, 11.5 59, 8 58.5 C 5 58, 3.5 56.5, 3.5 55 C 3.5 53.5, 7 52, 10 50.5 C 13 49, 16 47, 18 45 Z" fill="#c4ea24" />
-  <!-- Sparkles -->
-  <path d="M 38.8 11.5 Q 33.1 11.7 30.5 16.8 Q 30.3 11.1 25.2 8.5 Q 30.9 8.3 33.5 3.2 Q 33.7 8.9 38.8 11.5 Z" fill="#c4ea24" />
-  <path d="M 34.9 18.5 Q 26.4 21.8 25.5 30.9 Q 22.2 22.4 13.1 21.5 Q 21.6 18.2 22.5 9.1 Q 25.8 17.6 34.9 18.5 Z" fill="#c4ea24" />
-  <path d="M 50.7 30.5 Q 43.2 30.2 39.5 36.7 Q 39.8 29.2 33.3 25.5 Q 40.8 25.8 44.5 19.3 Q 44.2 26.8 50.7 30.5 Z" fill="#c4ea24" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- 4-point sparkle star definition -->
+    <path id="sparkle" d="M 0 -32 C 1 -7 7 -1 32 0 C 7 1 1 7 0 32 C -1 7 -7 1 -32 0 C -7 -1 -1 -7 0 -32 Z" fill="#bef264"/>
+  </defs>
+
+  <!-- Deep Black Favicon Background -->
+  <rect width="512" height="512" rx="104" fill="#000000"/>
+
+  <!-- Centered Icon Mark scaled for maximum legibility in browser tabs -->
+  <g transform="translate(256, 260) scale(1.65) translate(-256, -245)">
+    <!-- 1. The Bold White Letter 'L' -->
+    <path d="M 176 236
+             L 204 236
+             L 204 294
+             Q 204 304 214 304
+             L 232 304
+             Q 234 314 230 324
+             L 182 324
+             Q 176 324 176 318
+             Z"
+          fill="#ffffff" />
+
+    <!-- 2. Sweeping White Broom Handle -->
+    <path d="M 216 166
+             C 242 188 268 232 272 278"
+          fill="none"
+          stroke="#ffffff"
+          stroke-width="16"
+          stroke-linecap="round" />
+
+    <!-- 3. Broom Ferrule / Collar (White) -->
+    <path d="M 254 282
+             Q 272 276 288 288
+             Q 284 298 280 302
+             Q 265 294 250 292
+             Z"
+          fill="#ffffff" />
+
+    <!-- 4. Broom Bristles (Lime Green #9fe81d) -->
+    <path d="M 250 292
+             Q 265 294 280 302
+             C 285 328 266 348 244 354
+             C 222 358 200 346 202 336
+             C 212 340 226 334 232 322
+             C 240 308 246 296 250 292 Z"
+          fill="#9fe81d" />
+
+    <!-- Bristle Tufts Cut Lines (Black grooves) -->
+    <path d="M 222 344 C 236 340 250 328 256 304"
+          fill="none"
+          stroke="#000000"
+          stroke-width="3"
+          stroke-linecap="round" />
+    <path d="M 240 352 C 252 344 264 332 268 312"
+          fill="none"
+          stroke="#000000"
+          stroke-width="3"
+          stroke-linecap="round" />
+
+    <!-- 5. Three Sparkle Stars (Bright Chartreuse #bef264) -->
+    <!-- Top Sparkle (Medium) -->
+    <g transform="translate(300, 150) scale(0.68)">
+      <use href="#sparkle"/>
+    </g>
+
+    <!-- Center-Left Sparkle (Largest, Hero Star) -->
+    <g transform="translate(284, 202) scale(1.15)">
+      <use href="#sparkle"/>
+    </g>
+
+    <!-- Bottom-Right Sparkle (Medium-Large) -->
+    <g transform="translate(334, 226) scale(0.85)">
+      <use href="#sparkle"/>
+    </g>
+  </g>
 </svg>

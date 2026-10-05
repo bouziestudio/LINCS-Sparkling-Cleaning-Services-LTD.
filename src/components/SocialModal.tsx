@@ -18,7 +18,8 @@ export const SocialModal: React.FC<SocialModalProps> = ({
   const isIg = platform === 'instagram';
   const posts = isIg ? SOCIAL_POSTS.instagram : SOCIAL_POSTS.tiktok;
   const targetUrl = isIg ? COMPANY_INFO.instagramUrl : COMPANY_INFO.tiktokUrl;
-  const handleName = isIg ? `@${COMPANY_INFO.instagram}` : `@${COMPANY_INFO.tiktok}`;
+  const rawHandle = isIg ? COMPANY_INFO.instagram : COMPANY_INFO.tiktok;
+  const handleName = rawHandle.startsWith('@') ? rawHandle : `@${rawHandle}`;
 
   return (
     <div
