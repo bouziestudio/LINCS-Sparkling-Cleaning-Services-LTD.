@@ -1,5 +1,80 @@
 [
   {
+    "id": "LINCS-CT-5777",
+    "type": "quick_inquiry",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T19:23:23.621Z",
+    "payload": {
+      "type": "quick_inquiry",
+      "ticketId": "LINCS-CT-5777",
+      "name": "Marcus Vance",
+      "email": "marcus@vancegroup.co.uk",
+      "phone": "07222333444",
+      "message": "Fast inquiry about daily school cleaning contract"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-BK-2130",
+    "type": "booking",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T19:23:19.603Z",
+    "payload": {
+      "type": "booking",
+      "ticketId": "LINCS-BK-2130",
+      "name": "Sarah Collins",
+      "email": "sarah@collinsestate.co.uk",
+      "phone": "07111222333",
+      "serviceId": "end-of-tenancy",
+      "frequency": "one-off",
+      "propertyType": "residential",
+      "propertySize": "4-bed house",
+      "postcode": "KT16 8PW",
+      "message": "Deep clean before new tenants arrive",
+      "preferredTime": "Morning",
+      "contactMethod": "email"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-QT-1150",
+    "type": "quote",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T19:23:15.947Z",
+    "payload": {
+      "type": "quote",
+      "ticketId": "LINCS-QT-1150",
+      "name": "Commercial Client",
+      "email": "office@client.com",
+      "phone": "07700900999",
+      "serviceId": "commercial-carpet",
+      "message": "Need carpets cleaned in 3 floor office"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-QT-1071",
+    "type": "quote",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T19:10:15.202Z",
+    "payload": {
+      "type": "quote",
+      "ticketId": "LINCS-QT-1071",
+      "name": "jay",
+      "email": "jaynansense@gmail.com",
+      "phone": "8768043790",
+      "serviceId": "office-cleaning",
+      "serviceTitle": "Office Cleaning",
+      "frequency": "weekly",
+      "propertyType": "office",
+      "propertySize": "Medium (1,000 - 3,000 sq ft)",
+      "postcode": "KT16 8PW",
+      "message": "TEST",
+      "preferredTime": "Morning (07:00 - 11:00)"
+    },
+    "status": "dispatched"
+  },
+  {
     "id": "LINCS-CT-9970",
     "type": "quick_inquiry",
     "recipient": "info@lincscsltd.com",
