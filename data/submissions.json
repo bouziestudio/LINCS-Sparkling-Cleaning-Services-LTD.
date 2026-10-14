@@ -1,5 +1,53 @@
 [
   {
+    "id": "LINCS-CT-9970",
+    "type": "quick_inquiry",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T18:55:22.008Z",
+    "payload": {
+      "type": "quick_inquiry",
+      "ticketId": "LINCS-CT-9970",
+      "name": "David Miller",
+      "email": "david@logistics.com",
+      "phone": "07700900123",
+      "message": "Warehouse scrub estimate"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-BK-7288",
+    "type": "booking",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T18:55:17.143Z",
+    "payload": {
+      "type": "booking",
+      "ticketId": "LINCS-BK-7288",
+      "name": "Sarah Jenkins",
+      "email": "sarah@firm.co.uk",
+      "phone": "07987654321",
+      "serviceId": "commercial-carpet",
+      "message": "Annual carpet steam cleaning booking",
+      "contactMethod": "email"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-QT-3621",
+    "type": "quote",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T18:55:12.498Z",
+    "payload": {
+      "type": "quote",
+      "ticketId": "LINCS-QT-3621",
+      "name": "Test Customer",
+      "email": "client@example.com",
+      "phone": "07123456789",
+      "serviceId": "office-cleaning",
+      "message": "Need office quote"
+    },
+    "status": "dispatched"
+  },
+  {
     "id": "LINCS-BK-4078",
     "type": "booking",
     "recipient": "info@lincscsltd.com",
