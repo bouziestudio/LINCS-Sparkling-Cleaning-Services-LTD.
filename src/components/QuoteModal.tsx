@@ -280,7 +280,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
                   className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#9fe81d] hover:bg-[#8cd412] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg active:scale-95 cursor-pointer"
                 >
                   <Send className={`w-3.5 h-3.5 ${isSubmitting ? 'animate-spin' : ''}`} />
-                  <span>{isSubmitting ? 'Sending to info@lincscsltd.com...' : 'Submit Quote Request'}</span>
+                  <span>{isSubmitting ? 'Sending to info@lincsscsltd.com...' : 'Submit Quote Request'}</span>
                 </button>
               </div>
             </form>

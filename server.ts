@@ -11,7 +11,7 @@ const app = express();
 // Note: In AI Studio / Cloud Run container, Nginx listens on 8080 and proxies to port 3000.
 // Application must always listen on port 3000 (never 8080).
 const PORT = Number(process.env.APP_PORT) || 3000;
-const DISPATCH_EMAIL = process.env.DISPATCH_EMAIL || 'info@lincscsltd.com';
+const DISPATCH_EMAIL = process.env.DISPATCH_EMAIL || 'info@lincsscsltd.com';
 
 app.use(express.json());
 
@@ -82,7 +82,7 @@ async function dispatchEmail(payload: DispatchPayload) {
       : `[Fast Inquiry #${payload.ticketId}]`;
 
   const subject = `${subjectLabel} from ${payload.name || 'Website Visitor'} - LINCS Portal`;
-  const fromAddress = process.env.SMTP_FROM || `LINCS Cleaning Portal <info@lincscsltd.com>`;
+  const fromAddress = process.env.SMTP_FROM || `LINCS Cleaning Portal <info@lincsscsltd.com>`;
   const replyTo = payload.email || undefined;
 
   const htmlContent = `

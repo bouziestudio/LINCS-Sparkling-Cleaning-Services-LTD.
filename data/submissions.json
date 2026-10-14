@@ -1,5 +1,58 @@
 [
   {
+    "id": "LINCS-CT-8205",
+    "type": "quick_inquiry",
+    "recipient": "info@lincsscsltd.com",
+    "dispatchedAt": "2026-10-14T20:02:37.969Z",
+    "payload": {
+      "type": "quick_inquiry",
+      "ticketId": "LINCS-CT-8205",
+      "name": "Marcus Vance",
+      "email": "marcus@vancegroup.co.uk",
+      "phone": "07222333444",
+      "message": "Fast inquiry about daily school cleaning contract"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-BK-6847",
+    "type": "booking",
+    "recipient": "info@lincsscsltd.com",
+    "dispatchedAt": "2026-10-14T20:02:35.488Z",
+    "payload": {
+      "type": "booking",
+      "ticketId": "LINCS-BK-6847",
+      "name": "Sarah Collins",
+      "email": "sarah@collinsestate.co.uk",
+      "phone": "07111222333",
+      "serviceId": "end-of-tenancy",
+      "frequency": "one-off",
+      "propertyType": "residential",
+      "propertySize": "4-bed house",
+      "postcode": "KT16 8PW",
+      "message": "Deep clean before new tenants arrive",
+      "preferredTime": "Morning",
+      "contactMethod": "email"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-QT-5606",
+    "type": "quote",
+    "recipient": "info@lincsscsltd.com",
+    "dispatchedAt": "2026-10-14T20:02:32.195Z",
+    "payload": {
+      "type": "quote",
+      "ticketId": "LINCS-QT-5606",
+      "name": "Commercial Client",
+      "email": "office@client.co.uk",
+      "phone": "07700900999",
+      "serviceId": "commercial-carpet",
+      "message": "Need carpets cleaned in 3 floor office"
+    },
+    "status": "dispatched"
+  },
+  {
     "id": "LINCS-CT-5777",
     "type": "quick_inquiry",
     "recipient": "info@lincscsltd.com",

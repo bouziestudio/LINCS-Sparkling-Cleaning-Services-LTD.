@@ -525,7 +525,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#9fe81d] hover:bg-[#8cd412] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-950 font-black text-xs uppercase tracking-wider transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Send className={`w-4 h-4 ${isSubmitting ? 'animate-spin' : ''}`} />
-                      <span>{isSubmitting ? 'Sending to info@lincscsltd.com...' : 'Submit Cleaning Inquiry'}</span>
+                      <span>{isSubmitting ? 'Sending to info@lincsscsltd.com...' : 'Submit Cleaning Inquiry'}</span>
                     </button>
                   </div>
                 </form>

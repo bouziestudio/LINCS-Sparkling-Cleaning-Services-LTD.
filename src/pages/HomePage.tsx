@@ -427,7 +427,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       className="w-full py-4 rounded-full bg-[#9fe81d] hover:bg-[#8cd412] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-950 font-black text-sm uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Send className={`w-4 h-4 ${isQuickSubmitting ? 'animate-spin' : ''}`} />
-                      <span>{isQuickSubmitting ? 'Sending to info@lincscsltd.com...' : 'Send Fast Inquiry'}</span>
+                      <span>{isQuickSubmitting ? 'Sending to info@lincsscsltd.com...' : 'Send Fast Inquiry'}</span>
                     </button>
                   </form>
                 )}

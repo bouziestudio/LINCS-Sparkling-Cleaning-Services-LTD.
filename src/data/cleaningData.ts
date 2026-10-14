@@ -7,7 +7,7 @@ export const COMPANY_INFO = {
   phone: '+0749-070-5078',
   phoneDisplay: '+0749-070-5078',
   phoneTel: '+447490705078',
-  email: 'info@lincscsltd.com',
+  email: 'info@lincsscsltd.com',
   address: 'Clay Corner, Chertsey, Surrey KT16 8PW',
   fullAddress: 'Clay Corner, Chertsey, Surrey, KT16 8PW, United Kingdom',
   postcode: 'KT16 8PW',
