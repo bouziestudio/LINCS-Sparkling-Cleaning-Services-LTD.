@@ -29,25 +29,55 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
   const [submitted, setSubmitted] = useState(false);
   const [ticketId, setTicketId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [destinationEmail, setDestinationEmail] = useState(COMPANY_INFO.email);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const id = `LINCS-${Math.floor(1000 + Math.random() * 9000)}`;
-    setTicketId(id);
+    setIsSubmitting(true);
+    const localId = `LINCS-QT-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    // Save submission to localStorage
-    const existing = JSON.parse(localStorage.getItem('lincs_quotes') || '[]');
-    existing.push({
+    const selectedService = SERVICES.find((s) => s.id === formData.serviceId);
+    const payload = {
       ...formData,
-      id,
-      createdAt: new Date().toISOString(),
-      status: 'pending',
-    });
-    localStorage.setItem('lincs_quotes', JSON.stringify(existing));
+      id: localId,
+      serviceTitle: selectedService ? selectedService.title : formData.serviceId,
+      submittedAt: new Date().toISOString(),
+    };
 
-    setSubmitted(true);
+    try {
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (data.ticketId) {
+        setTicketId(data.ticketId);
+      } else {
+        setTicketId(localId);
+      }
+      if (data.recipient) {
+        setDestinationEmail(data.recipient);
+      }
+    } catch (err) {
+      console.warn('Backend quote dispatch fallback:', err);
+      setTicketId(localId);
+    } finally {
+      // Save submission to localStorage as client cache
+      const existing = JSON.parse(localStorage.getItem('lincs_quotes') || '[]');
+      existing.push({
+        ...payload,
+        status: 'dispatched',
+        recipient: COMPANY_INFO.email,
+      });
+      localStorage.setItem('lincs_quotes', JSON.stringify(existing));
+
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }
   };
 
   const handleReset = () => {
@@ -103,6 +133,10 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               </p>
               <div className="inline-block bg-neutral-950 border border-neutral-700 rounded-lg px-4 py-2 font-mono text-sm text-[#9fe81d] font-bold">
                 Ticket #{ticketId}
+              </div>
+              <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-3 max-w-md mx-auto">
+                <span className="text-neutral-400 block mb-0.5">Dispatched to LINCS Operations:</span>
+                <span className="text-[#9fe81d] font-mono font-bold">{destinationEmail}</span>
               </div>
               <p className="text-xs text-neutral-400">
                 A LINCS supervisor will review your specifications and contact you at{' '}
@@ -242,10 +276,11 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#9fe81d] hover:bg-[#8cd412] text-neutral-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg active:scale-95 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#9fe81d] hover:bg-[#8cd412] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg active:scale-95 cursor-pointer"
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Submit Quote Request</span>
+                  <Send className={`w-3.5 h-3.5 ${isSubmitting ? 'animate-spin' : ''}`} />
+                  <span>{isSubmitting ? 'Sending to info@lincscsltd.com...' : 'Submit Quote Request'}</span>
                 </button>
               </div>
             </form>

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "LINCS-BK-4078",
+    "type": "booking",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T18:16:04.148Z",
+    "payload": {
+      "type": "booking",
+      "ticketId": "LINCS-BK-4078",
+      "name": "David Miller",
+      "email": "david.miller@example.com",
+      "phone": "07123456789",
+      "serviceId": "commercial-deep-clean",
+      "serviceTitle": "Deep Cleaning",
+      "propertyType": "restaurant",
+      "propertySize": "Large",
+      "postcode": "KT16 8PW",
+      "message": "Need an urgent kitchen deep scrub before hygiene inspection",
+      "contactMethod": "phone"
+    },
+    "status": "dispatched"
+  },
+  {
+    "id": "LINCS-QT-2084",
+    "type": "quote",
+    "recipient": "info@lincscsltd.com",
+    "dispatchedAt": "2026-10-14T18:15:58.424Z",
+    "payload": {
+      "type": "quote",
+      "ticketId": "LINCS-QT-2084",
+      "name": "Sarah Jenkins",
+      "email": "sarah.jenkins@example.com",
+      "phone": "07490705078",
+      "serviceId": "office-cleaning",
+      "serviceTitle": "Office Cleaning",
+      "propertyType": "office",
+      "propertySize": "Medium (2,000 sq ft)",
+      "postcode": "KT16 8PW",
+      "message": "Looking for weekly evening office cleaning"
+    },
+    "status": "dispatched"
+  }
+]

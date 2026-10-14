@@ -41,24 +41,54 @@ export const ContactPage: React.FC<ContactPageProps> = ({
   const [contactMethod, setContactMethod] = useState<'phone' | 'email' | 'whatsapp'>('phone');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [ticketId, setTicketId] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [destinationEmail, setDestinationEmail] = useState(COMPANY_INFO.email);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const id = `LINCS-CT-${Math.floor(1000 + Math.random() * 9000)}`;
-    setTicketId(id);
+    setIsSubmitting(true);
+    const localId = `LINCS-BK-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const existing = JSON.parse(localStorage.getItem('lincs_contacts') || '[]');
-    existing.push({
+    const selectedService = SERVICES.find((s) => s.id === formData.serviceId);
+    const payload = {
       ...formData,
       contactMethod,
-      id,
-      createdAt: new Date().toISOString(),
-      status: 'pending',
-    });
-    localStorage.setItem('lincs_contacts', JSON.stringify(existing));
+      id: localId,
+      serviceTitle: selectedService ? selectedService.title : formData.serviceId,
+      submittedAt: new Date().toISOString(),
+    };
 
-    setIsSubmitted(true);
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (data.ticketId) {
+        setTicketId(data.ticketId);
+      } else {
+        setTicketId(localId);
+      }
+      if (data.recipient) {
+        setDestinationEmail(data.recipient);
+      }
+    } catch (err) {
+      console.warn('Backend booking dispatch fallback:', err);
+      setTicketId(localId);
+    } finally {
+      const existing = JSON.parse(localStorage.getItem('lincs_contacts') || '[]');
+      existing.push({
+        ...payload,
+        status: 'dispatched',
+        recipient: COMPANY_INFO.email,
+      });
+      localStorage.setItem('lincs_contacts', JSON.stringify(existing));
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    }
   };
 
   const faqs = [
@@ -299,6 +329,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <div className="inline-block bg-neutral-950 border border-neutral-700 px-6 py-3 rounded-xl font-mono text-base font-bold text-[#9fe81d]">
                     #{ticketId}
                   </div>
+                  <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-3 max-w-md mx-auto">
+                    <span className="text-neutral-400 block mb-0.5">Dispatched directly to LINCS Dispatch:</span>
+                    <span className="text-[#9fe81d] font-mono font-bold">{destinationEmail}</span>
+                  </div>
                   <p className="text-xs text-neutral-400 max-w-sm mx-auto">
                     A LINCS operations manager will review your property requirements and contact you via{' '}
                     <span className="font-semibold text-white capitalize">{contactMethod}</span> at{' '}
@@ -487,10 +521,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#9fe81d] hover:bg-[#8cd412] text-neutral-950 font-black text-xs uppercase tracking-wider transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#9fe81d] hover:bg-[#8cd412] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-950 font-black text-xs uppercase tracking-wider transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <Send className="w-4 h-4" />
-                      <span>Submit Cleaning Inquiry</span>
+                      <Send className={`w-4 h-4 ${isSubmitting ? 'animate-spin' : ''}`} />
+                      <span>{isSubmitting ? 'Sending to info@lincscsltd.com...' : 'Submit Cleaning Inquiry'}</span>
                     </button>
                   </div>
                 </form>

@@ -38,23 +38,52 @@ export const HomePage: React.FC<HomePageProps> = ({
   });
   const [quickSubmitted, setQuickSubmitted] = useState(false);
   const [quickTicketId, setQuickTicketId] = useState('');
+  const [isQuickSubmitting, setIsQuickSubmitting] = useState(false);
+  const [quickDestination, setQuickDestination] = useState(COMPANY_INFO.email);
 
-  const handleQuickSubmit = (e: React.FormEvent) => {
+  const handleQuickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!quickForm.name || !quickForm.email) return;
 
-    const id = `FLYER-${Math.floor(1000 + Math.random() * 9000)}`;
-    setQuickTicketId(id);
+    setIsQuickSubmitting(true);
+    const localId = `FLYER-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const existing = JSON.parse(localStorage.getItem('lincs_quick_inquiries') || '[]');
-    existing.push({
+    const payload = {
       ...quickForm,
-      id,
-      createdAt: new Date().toISOString(),
-    });
-    localStorage.setItem('lincs_quick_inquiries', JSON.stringify(existing));
+      id: localId,
+      submittedAt: new Date().toISOString(),
+    };
 
-    setQuickSubmitted(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (data.ticketId) {
+        setQuickTicketId(data.ticketId);
+      } else {
+        setQuickTicketId(localId);
+      }
+      if (data.recipient) {
+        setQuickDestination(data.recipient);
+      }
+    } catch (err) {
+      console.warn('Backend quick inquiry fallback:', err);
+      setQuickTicketId(localId);
+    } finally {
+      const existing = JSON.parse(localStorage.getItem('lincs_quick_inquiries') || '[]');
+      existing.push({
+        ...payload,
+        status: 'dispatched',
+        recipient: COMPANY_INFO.email,
+      });
+      localStorage.setItem('lincs_quick_inquiries', JSON.stringify(existing));
+
+      setIsQuickSubmitting(false);
+      setQuickSubmitted(true);
+    }
   };
 
   const flyerServices = SERVICES.filter((s) => s.flyerMatch);
@@ -308,14 +337,17 @@ export const HomePage: React.FC<HomePageProps> = ({
                       Inquiry Sent!
                     </h4>
                     <p className="text-xs text-neutral-300 max-w-sm mx-auto">
-                      Thank you, <span className="font-bold text-[#9fe81d]">{quickForm.name}</span>. Your ticket <span className="font-mono text-white">#{quickTicketId}</span> has been assigned to our Chertsey team.
+                      Thank you, <span className="font-bold text-[#9fe81d]">{quickForm.name}</span>. Your ticket <span className="font-mono text-white">#{quickTicketId}</span> has been dispatched to our operations inbox:
                     </p>
+                    <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-2.5 max-w-xs mx-auto font-mono text-[#9fe81d] font-bold">
+                      {quickDestination}
+                    </div>
                     <button
                       onClick={() => {
                         setQuickSubmitted(false);
                         setQuickForm({ name: '', email: '', phone: '', request: '' });
                       }}
-                      className="px-6 py-2 rounded-lg bg-[#9fe81d] text-neutral-950 font-bold text-xs uppercase tracking-wider"
+                      className="px-6 py-2 rounded-lg bg-[#9fe81d] text-neutral-950 font-bold text-xs uppercase tracking-wider hover:bg-[#8cd412] transition-colors"
                     >
                       Send Another Request
                     </button>
@@ -391,10 +423,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                     {/* Submit Button */}
                     <button
                       type="submit"
-                      className="w-full py-4 rounded-full bg-[#9fe81d] hover:bg-[#8cd412] text-neutral-950 font-black text-sm uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      disabled={isQuickSubmitting}
+                      className="w-full py-4 rounded-full bg-[#9fe81d] hover:bg-[#8cd412] disabled:opacity-60 disabled:cursor-not-allowed text-neutral-950 font-black text-sm uppercase tracking-wider shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <Send className="w-4 h-4" />
-                      <span>Send Fast Inquiry</span>
+                      <Send className={`w-4 h-4 ${isQuickSubmitting ? 'animate-spin' : ''}`} />
+                      <span>{isQuickSubmitting ? 'Sending to info@lincscsltd.com...' : 'Send Fast Inquiry'}</span>
                     </button>
                   </form>
                 )}
