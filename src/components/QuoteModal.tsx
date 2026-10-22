@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { SERVICES, COMPANY_INFO } from '../data/cleaningData';
 import { QuoteFormData } from '../types';
-import { X, CheckCircle2, Sparkles, Send, Phone, Calendar, Mail, ExternalLink } from 'lucide-react';
+import { X, CheckCircle2, Sparkles, Send, Phone, Calendar } from 'lucide-react';
 
 interface QuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
   preselectedServiceId?: string;
-  onOpenWorkspaceModal?: () => void;
 }
 
 export const QuoteModal: React.FC<QuoteModalProps> = ({
   isOpen,
   onClose,
   preselectedServiceId,
-  onOpenWorkspaceModal,
 }) => {
   const [formData, setFormData] = useState<QuoteFormData>({
     name: '',
@@ -136,37 +134,25 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               <div className="inline-block bg-neutral-950 border border-neutral-700 rounded-lg px-4 py-2 font-mono text-sm text-[#9fe81d] font-bold">
                 Ticket #{ticketId}
               </div>
-              <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-3 max-w-md mx-auto space-y-1">
-                <span className="text-neutral-400 block">Routed to Official Google Workspace:</span>
-                <span className="text-[#9fe81d] font-mono font-bold text-sm block">{destinationEmail}</span>
-                <span className="text-[11px] text-neutral-400 block pt-0.5">
-                  1-Click Calendar scheduling &amp; GPS dispatch active
-                </span>
+              <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-3 max-w-md mx-auto">
+                <span className="text-neutral-400 block mb-0.5">Dispatched to LINCS Operations:</span>
+                <span className="text-[#9fe81d] font-mono font-bold">{destinationEmail}</span>
               </div>
               <p className="text-xs text-neutral-400">
                 A LINCS supervisor will review your specifications and contact you at{' '}
                 <span className="text-white font-mono">{formData.phone || formData.email}</span> within 24 hours.
               </p>
-              <div className="pt-4 flex flex-wrap justify-center gap-2.5">
+              <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
                 <a
                   href={`tel:${COMPANY_INFO.phoneTel}`}
                   className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold uppercase tracking-wider"
                 >
                   <Phone className="w-3.5 h-3.5 text-[#9fe81d]" />
-                  <span>Call Directly</span>
+                  <span>Call Us Directly</span>
                 </a>
-                {onOpenWorkspaceModal && (
-                  <button
-                    onClick={onOpenWorkspaceModal}
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-lg bg-[#182315] hover:bg-[#20301d] border border-[#9fe81d]/40 text-[#bef264] text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                  >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>Workspace Status</span>
-                  </button>
-                )}
                 <button
                   onClick={handleReset}
-                  className="px-6 py-2.5 rounded-lg bg-[#9fe81d] text-neutral-950 hover:bg-[#8cd412] font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
+                  className="px-6 py-2.5 rounded-lg bg-[#9fe81d] text-neutral-950 hover:bg-[#8cd412] font-bold text-xs uppercase tracking-wider transition-colors"
                 >
                   Done
                 </button>

@@ -19,13 +19,11 @@ import {
 interface ContactPageProps {
   onNavigate: (page: PageId) => void;
   onOpenSocialModal: (platform: 'instagram' | 'tiktok') => void;
-  onOpenWorkspaceModal?: () => void;
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({
   onNavigate,
   onOpenSocialModal,
-  onOpenWorkspaceModal,
 }) => {
   const [formData, setFormData] = useState<QuoteFormData>({
     name: '',
@@ -180,30 +178,6 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       {COMPANY_INFO.email}
                     </a>
                     <p className="text-xs text-neutral-400 mt-0.5">24h turnaround for quotes &amp; tenders</p>
-                    <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <a
-                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
-                          COMPANY_INFO.email
-                        )}&su=Cleaning%20Quote%20Inquiry%20-%20LINCS`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#182315] hover:bg-[#22331e] border border-[#9fe81d]/40 text-[#bef264] text-[11px] font-bold transition-colors"
-                      >
-                        <Mail className="w-3 h-3 text-[#9fe81d]" />
-                        <span>Compose in Gmail</span>
-                        <ExternalLink className="w-2.5 h-2.5 opacity-70" />
-                      </a>
-                      {onOpenWorkspaceModal && (
-                        <button
-                          type="button"
-                          onClick={onOpenWorkspaceModal}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-[11px] font-bold transition-colors cursor-pointer"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#9fe81d]" />
-                          <span>Routing Status</span>
-                        </button>
-                      )}
-                    </div>
                   </div>
                 </div>
 
@@ -355,12 +329,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <div className="inline-block bg-neutral-950 border border-neutral-700 px-6 py-3 rounded-xl font-mono text-base font-bold text-[#9fe81d]">
                     #{ticketId}
                   </div>
-                  <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-3.5 max-w-md mx-auto space-y-1">
-                    <span className="text-neutral-400 block">Routed to Official Google Workspace:</span>
-                    <span className="text-[#9fe81d] font-mono font-bold text-sm block">{destinationEmail}</span>
-                    <span className="text-[11px] text-neutral-400 block pt-0.5">
-                      Deliverability optimized · 1-click Google Calendar &amp; Maps dispatch enabled
-                    </span>
+                  <div className="text-xs text-neutral-300 bg-neutral-950/70 border border-neutral-800 rounded-xl p-3 max-w-md mx-auto">
+                    <span className="text-neutral-400 block mb-0.5">Dispatched directly to LINCS Dispatch:</span>
+                    <span className="text-[#9fe81d] font-mono font-bold">{destinationEmail}</span>
                   </div>
                   <p className="text-xs text-neutral-400 max-w-sm mx-auto">
                     A LINCS operations manager will review your property requirements and contact you via{' '}
@@ -368,24 +339,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     <span className="font-mono text-white">{formData.phone || formData.email}</span>.
                   </p>
 
-                  <div className="pt-4 flex flex-wrap justify-center gap-3">
+                  <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
                     <a
                       href={`tel:${COMPANY_INFO.phoneTel}`}
-                      className="px-5 py-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
+                      className="px-6 py-3 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2"
                     >
                       <Phone className="w-4 h-4 text-[#9fe81d]" />
-                      <span>Call {COMPANY_INFO.phone}</span>
+                      <span>Need Urgent Service? Call {COMPANY_INFO.phone}</span>
                     </a>
-                    {onOpenWorkspaceModal && (
-                      <button
-                        type="button"
-                        onClick={onOpenWorkspaceModal}
-                        className="px-4 py-3 rounded-xl bg-[#182315] hover:bg-[#20301d] border border-[#9fe81d]/40 text-[#bef264] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <Mail className="w-4 h-4 text-[#9fe81d]" />
-                        <span>Workspace Status</span>
-                      </button>
-                    )}
                     <button
                       onClick={() => {
                         setIsSubmitted(false);
