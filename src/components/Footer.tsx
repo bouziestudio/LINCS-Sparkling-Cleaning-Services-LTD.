@@ -7,9 +7,14 @@ import { Phone, Mail, MapPin, ShieldCheck, Clock, CheckCircle2, ExternalLink } f
 interface FooterProps {
   onNavigate: (page: PageId) => void;
   onOpenSocialModal: (platform: 'instagram' | 'tiktok') => void;
+  onOpenWorkspaceModal?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSocialModal }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onNavigate,
+  onOpenSocialModal,
+  onOpenWorkspaceModal,
+}) => {
   return (
     <footer className="bg-[#0B0F0B] text-neutral-300 border-t border-neutral-800">
       {/* Lime accent bar */}
@@ -121,6 +126,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSocialModal })
                     {COMPANY_INFO.email}
                   </a>
                   <p className="text-xs text-neutral-500">24-hour response SLA</p>
+                  {onOpenWorkspaceModal && (
+                    <button
+                      onClick={onOpenWorkspaceModal}
+                      className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#182315] hover:bg-[#20301d] border border-[#9fe81d]/30 text-[10px] font-bold text-[#bef264] transition-colors cursor-pointer"
+                      title="Google Workspace Deliverability & Routing"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#9fe81d] animate-pulse" />
+                      <span>Google Workspace Verified</span>
+                    </button>
+                  )}
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -209,10 +224,22 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenSocialModal })
           <p>
             © {new Date().getFullYear()} {COMPANY_INFO.name}. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             <span>Clay Corner, Chertsey Surrey KT16 8PW</span>
             <span aria-hidden="true">·</span>
             <span>Commercial &amp; Residential Specialists</span>
+            {onOpenWorkspaceModal && (
+              <>
+                <span aria-hidden="true">·</span>
+                <button
+                  onClick={onOpenWorkspaceModal}
+                  className="text-neutral-400 hover:text-[#9fe81d] transition-colors cursor-pointer flex items-center gap-1 font-mono"
+                >
+                  <Mail className="w-3 h-3 text-[#9fe81d]" />
+                  <span>Workspace Routing: {COMPANY_INFO.email}</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

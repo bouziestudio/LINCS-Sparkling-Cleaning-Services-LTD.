@@ -13,6 +13,7 @@ import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { QuoteModal } from './components/QuoteModal';
 import { SocialModal } from './components/SocialModal';
+import { GoogleWorkspaceModal } from './components/GoogleWorkspaceModal';
 import { COMPANY_INFO } from './data/cleaningData';
 import { Phone, Sparkles } from 'lucide-react';
 
@@ -21,6 +22,7 @@ export default function App() {
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [quoteServiceId, setQuoteServiceId] = useState<string | undefined>(undefined);
   const [socialModalPlatform, setSocialModalPlatform] = useState<'instagram' | 'tiktok' | null>(null);
+  const [isWorkspaceModalOpen, setIsWorkspaceModalOpen] = useState(false);
 
   // Sync hash if present or default to home
   useEffect(() => {
@@ -58,6 +60,7 @@ export default function App() {
         currentPage={currentPage}
         onNavigate={handleNavigate}
         onOpenQuote={() => handleOpenQuote()}
+        onOpenWorkspaceModal={() => setIsWorkspaceModalOpen(true)}
       />
 
       {/* Main Page Content */}
@@ -85,6 +88,7 @@ export default function App() {
           <ContactPage
             onNavigate={handleNavigate}
             onOpenSocialModal={handleOpenSocial}
+            onOpenWorkspaceModal={() => setIsWorkspaceModalOpen(true)}
           />
         )}
       </main>
@@ -115,6 +119,7 @@ export default function App() {
       <Footer
         onNavigate={handleNavigate}
         onOpenSocialModal={handleOpenSocial}
+        onOpenWorkspaceModal={() => setIsWorkspaceModalOpen(true)}
       />
 
       {/* Modals */}
@@ -122,12 +127,18 @@ export default function App() {
         isOpen={isQuoteOpen}
         onClose={() => setIsQuoteOpen(false)}
         preselectedServiceId={quoteServiceId}
+        onOpenWorkspaceModal={() => setIsWorkspaceModalOpen(true)}
       />
 
       <SocialModal
         isOpen={!!socialModalPlatform}
         platform={socialModalPlatform}
         onClose={() => setSocialModalPlatform(null)}
+      />
+
+      <GoogleWorkspaceModal
+        isOpen={isWorkspaceModalOpen}
+        onClose={() => setIsWorkspaceModalOpen(false)}
       />
     </div>
   );
