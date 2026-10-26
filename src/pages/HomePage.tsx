@@ -16,6 +16,7 @@ import {
   Clock,
   Send,
   Check,
+  AlertCircle,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -40,10 +41,12 @@ export const HomePage: React.FC<HomePageProps> = ({
   const [quickTicketId, setQuickTicketId] = useState('');
   const [isQuickSubmitting, setIsQuickSubmitting] = useState(false);
   const [quickDestination, setQuickDestination] = useState(COMPANY_INFO.email);
+  const [quickError, setQuickError] = useState<string | null>(null);
 
   const handleQuickSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!quickForm.name || !quickForm.email) return;
+    setQuickError(null);
+    if (!quickForm.name.trim() || !quickForm.email.trim()) return;
 
     setIsQuickSubmitting(true);
     const localId = `FLYER-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -60,29 +63,28 @@ export const HomePage: React.FC<HomePageProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await response.json();
-      if (data.ticketId) {
-        setQuickTicketId(data.ticketId);
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data?.success) {
+        setQuickTicketId(data.ticketId || localId);
+        if (data.recipient) {
+          setQuickDestination(data.recipient);
+        }
+        setQuickSubmitted(true);
       } else {
-        setQuickTicketId(localId);
-      }
-      if (data.recipient) {
-        setQuickDestination(data.recipient);
+        const errorMsg =
+          data?.error ||
+          'Failed to send your inquiry. Please try again or email info@lincsscsltd.com directly.';
+        setQuickError(errorMsg);
       }
     } catch (err) {
-      console.warn('Backend quick inquiry fallback:', err);
-      setQuickTicketId(localId);
+      console.error('Quick inquiry submission failed:', err);
+      setQuickError(
+        'Network error connecting to the server. Please check your connection, retry, or email info@lincsscsltd.com directly.'
+      );
     } finally {
-      const existing = JSON.parse(localStorage.getItem('lincs_quick_inquiries') || '[]');
-      existing.push({
-        ...payload,
-        status: 'dispatched',
-        recipient: COMPANY_INFO.email,
-      });
-      localStorage.setItem('lincs_quick_inquiries', JSON.stringify(existing));
-
       setIsQuickSubmitting(false);
-      setQuickSubmitted(true);
     }
   };
 
@@ -364,7 +366,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                           type="text"
                           required
                           value={quickForm.name}
-                          onChange={(e) => setQuickForm({ ...quickForm, name: e.target.value })}
+                          onChange={(e) => {
+                            setQuickError(null);
+                            setQuickForm({ ...quickForm, name: e.target.value });
+                          }}
                           placeholder="Your full name"
                           className="w-full bg-transparent text-neutral-950 font-medium text-sm outline-none placeholder:text-neutral-600"
                         />
@@ -381,7 +386,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                           type="email"
                           required
                           value={quickForm.email}
-                          onChange={(e) => setQuickForm({ ...quickForm, email: e.target.value })}
+                          onChange={(e) => {
+                            setQuickError(null);
+                            setQuickForm({ ...quickForm, email: e.target.value });
+                          }}
                           placeholder="your.email@example.com"
                           className="w-full bg-transparent text-neutral-950 font-medium text-sm outline-none placeholder:text-neutral-600"
                         />
@@ -397,7 +405,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                         <input
                           type="tel"
                           value={quickForm.phone}
-                          onChange={(e) => setQuickForm({ ...quickForm, phone: e.target.value })}
+                          onChange={(e) => {
+                            setQuickError(null);
+                            setQuickForm({ ...quickForm, phone: e.target.value });
+                          }}
                           placeholder="e.g. 07490 705078"
                           className="w-full bg-transparent text-neutral-950 font-medium text-sm outline-none placeholder:text-neutral-600 font-mono"
                         />
@@ -413,12 +424,42 @@ export const HomePage: React.FC<HomePageProps> = ({
                         <textarea
                           rows={3}
                           value={quickForm.request}
-                          onChange={(e) => setQuickForm({ ...quickForm, request: e.target.value })}
+                          onChange={(e) => {
+                            setQuickError(null);
+                            setQuickForm({ ...quickForm, request: e.target.value });
+                          }}
                           placeholder="Describe the cleaning needed (office, restaurant, carpets, factory, etc.)..."
                           className="w-full bg-transparent text-neutral-950 font-medium text-sm outline-none placeholder:text-neutral-600 resize-none"
                         />
                       </div>
                     </div>
+
+                    {/* Error Alert Box */}
+                    {quickError && (
+                      <div className="rounded-2xl bg-red-950/90 border border-red-500/60 p-4 text-xs text-red-200 space-y-2 animate-fade-in">
+                        <div className="flex items-center gap-2 font-bold text-red-400">
+                          <AlertCircle className="w-4 h-4 shrink-0" />
+                          <span>Inquiry could not be dispatched</span>
+                        </div>
+                        <p className="leading-relaxed">{quickError}</p>
+                        <p className="pt-1 text-[11px] text-neutral-300">
+                          Please retry or reach us directly at{' '}
+                          <a
+                            href={`mailto:${COMPANY_INFO.email}`}
+                            className="underline font-bold text-white hover:text-[#9fe81d]"
+                          >
+                            {COMPANY_INFO.email}
+                          </a>{' '}
+                          or call{' '}
+                          <a
+                            href={`tel:${COMPANY_INFO.phoneTel}`}
+                            className="underline font-bold text-white hover:text-[#9fe81d]"
+                          >
+                            {COMPANY_INFO.phone}
+                          </a>.
+                        </p>
+                      </div>
+                    )}
 
                     {/* Submit Button */}
                     <button

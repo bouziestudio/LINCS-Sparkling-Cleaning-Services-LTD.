@@ -41,6 +41,20 @@ function saveSubmission(entry: any) {
 
 // Mailer configuration
 function getTransporter() {
+  const gwPass = process.env.GOOGLE_WORKSPACE_APP_PASSWORD;
+  const gwEmail = process.env.GOOGLE_WORKSPACE_EMAIL || process.env.DISPATCH_EMAIL || 'info@lincsscsltd.com';
+  if (gwPass) {
+    return nodemailer.createTransport({
+      host: process.env.GOOGLE_WORKSPACE_RELAY_HOST || 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: gwEmail,
+        pass: gwPass.replace(/\s+/g, ''),
+      },
+    });
+  }
+
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
@@ -225,34 +239,41 @@ ${payload.message || 'No additional message.'}
   console.log(`Customer: ${payload.name} | Phone: ${payload.phone} | Email: ${payload.email}`);
   console.log(`============================================================\n`);
 
-  // Persist submission record
+  const transporter = getTransporter();
+  if (!transporter) {
+    const errorMsg = 'SMTP email dispatch is not configured on the server. Please contact info@lincsscsltd.com directly.';
+    console.error(`[SMTP Configuration Error] ${errorMsg}`);
+    const configErr = new Error(errorMsg);
+    (configErr as any).statusCode = 503;
+    throw configErr;
+  }
+
+  try {
+    await transporter.sendMail({
+      from: fromAddress,
+      to: DISPATCH_EMAIL,
+      replyTo,
+      subject,
+      text: textContent,
+      html: htmlContent,
+    });
+    console.log(`[SMTP] Successfully delivered email #${payload.ticketId} to ${DISPATCH_EMAIL}`);
+  } catch (err: any) {
+    console.error(`[SMTP Error] Could not deliver email #${payload.ticketId}:`, err);
+    const sendErr = new Error(`Failed to deliver email via SMTP: ${err?.message || 'Delivery error'}`);
+    (sendErr as any).statusCode = 502;
+    throw sendErr;
+  }
+
+  // Persist submission record ONLY after SMTP delivery succeeds
   saveSubmission({
     id: payload.ticketId,
     type: payload.type,
     recipient: DISPATCH_EMAIL,
     dispatchedAt: new Date().toISOString(),
     payload,
-    status: 'dispatched',
+    status: 'sent',
   });
-
-  const transporter = getTransporter();
-  if (transporter) {
-    try {
-      await transporter.sendMail({
-        from: fromAddress,
-        to: DISPATCH_EMAIL,
-        replyTo,
-        subject,
-        text: textContent,
-        html: htmlContent,
-      });
-      console.log(`[SMTP] Successfully delivered email #${payload.ticketId} to ${DISPATCH_EMAIL}`);
-    } catch (err) {
-      console.error(`[SMTP Error] Could not deliver email #${payload.ticketId}:`, err);
-    }
-  } else {
-    console.log(`[Email Dispatch] Routed to ${DISPATCH_EMAIL} (transporter in log mode).`);
-  }
 
   return {
     success: true,
@@ -263,25 +284,20 @@ ${payload.message || 'No additional message.'}
 
 // REST Endpoints
 app.get('/api/health', (req: Request, res: Response) => {
+  const smtpConfigured = !!(
+    (process.env.SMTP_HOST && process.env.SMTP_USER) ||
+    process.env.GOOGLE_WORKSPACE_APP_PASSWORD
+  );
   res.json({
     status: 'ok',
     dispatchEmail: DISPATCH_EMAIL,
-    smtpConfigured: !!(process.env.SMTP_HOST && process.env.SMTP_USER),
+    smtpConfigured,
     timestamp: new Date().toISOString(),
   });
 });
 
-app.get('/api/submissions', (req: Request, res: Response) => {
-  try {
-    const raw = fs.readFileSync(SUBMISSIONS_FILE, 'utf-8');
-    res.json(JSON.parse(raw || '[]'));
-  } catch {
-    res.json([]);
-  }
-});
-
 // Quote Request Handler
-app.post(['/api/quote', '/api/quotes'], async (req: Request, res: Response) => {
+app.post(['/api/quote', '/api/quotes', '/api/quote-request'], async (req: Request, res: Response) => {
   try {
     const body = req.body || {};
     const ticketId = body.id || `LINCS-QT-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -289,16 +305,16 @@ app.post(['/api/quote', '/api/quotes'], async (req: Request, res: Response) => {
     const result = await dispatchEmail({
       type: 'quote',
       ticketId,
-      name: body.name || 'Anonymous',
+      name: body.name || body.fullName || 'Anonymous',
       email: body.email,
-      phone: body.phone,
+      phone: body.phone || body.telephone,
       serviceId: body.serviceId,
       serviceTitle: body.serviceTitle,
       frequency: body.frequency,
       propertyType: body.propertyType,
       propertySize: body.propertySize,
       postcode: body.postcode,
-      message: body.message,
+      message: body.message || body.request || body.query,
       preferredTime: body.preferredTime,
     });
 
@@ -310,12 +326,12 @@ app.post(['/api/quote', '/api/quotes'], async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error('Failed to process quote:', error);
-    res.status(500).json({ success: false, error: error.message || 'Internal server error' });
+    res.status(error.statusCode || 500).json({ success: false, error: error.message || 'Internal server error' });
   }
 });
 
 // Booking Request Handler
-app.post(['/api/booking', '/api/bookings'], async (req: Request, res: Response) => {
+app.post(['/api/booking', '/api/bookings', '/api/booking-request'], async (req: Request, res: Response) => {
   try {
     const body = req.body || {};
     const ticketId = body.id || `LINCS-BK-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -323,16 +339,16 @@ app.post(['/api/booking', '/api/bookings'], async (req: Request, res: Response) 
     const result = await dispatchEmail({
       type: 'booking',
       ticketId,
-      name: body.name || 'Anonymous',
+      name: body.name || body.fullName || 'Anonymous',
       email: body.email,
-      phone: body.phone,
+      phone: body.phone || body.telephone,
       serviceId: body.serviceId,
       serviceTitle: body.serviceTitle,
       frequency: body.frequency,
       propertyType: body.propertyType,
       propertySize: body.propertySize,
       postcode: body.postcode,
-      message: body.message,
+      message: body.message || body.request || body.query,
       preferredTime: body.preferredTime,
       contactMethod: body.contactMethod,
     });
@@ -345,40 +361,53 @@ app.post(['/api/booking', '/api/bookings'], async (req: Request, res: Response) 
     });
   } catch (error: any) {
     console.error('Failed to process booking:', error);
-    res.status(500).json({ success: false, error: error.message || 'Internal server error' });
+    res.status(error.statusCode || 500).json({ success: false, error: error.message || 'Internal server error' });
   }
 });
 
-// Fast Inquiry / Contact Form Handler
-app.post(['/api/contact', '/api/inquiries'], async (req: Request, res: Response) => {
-  try {
-    const body = req.body || {};
-    const ticketId = body.id || `LINCS-CT-${Math.floor(1000 + Math.random() * 9000)}`;
+// Fast Inquiry, General Requests & Queries Handler
+app.post(
+  [
+    '/api/contact',
+    '/api/inquiries',
+    '/api/inquiry',
+    '/api/request',
+    '/api/requests',
+    '/api/query',
+    '/api/queries',
+    '/api/message',
+    '/api/messages',
+  ],
+  async (req: Request, res: Response) => {
+    try {
+      const body = req.body || {};
+      const ticketId = body.id || `LINCS-CT-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const result = await dispatchEmail({
-      type: 'quick_inquiry',
-      ticketId,
-      name: body.name || 'Anonymous',
-      email: body.email,
-      phone: body.phone,
-      serviceId: body.serviceId,
-      serviceTitle: body.serviceTitle || body.service,
-      message: body.request || body.message,
-      contactMethod: body.contactMethod,
-      postcode: body.postcode,
-    });
+      const result = await dispatchEmail({
+        type: 'quick_inquiry',
+        ticketId,
+        name: body.name || body.fullName || 'Anonymous',
+        email: body.email,
+        phone: body.phone || body.telephone,
+        serviceId: body.serviceId,
+        serviceTitle: body.serviceTitle || body.service,
+        message: body.request || body.query || body.message || body.notes || body.details,
+        contactMethod: body.contactMethod,
+        postcode: body.postcode,
+      });
 
-    res.json({
-      success: true,
-      message: `Inquiry successfully sent to ${DISPATCH_EMAIL}`,
-      ticketId: result.ticketId,
-      recipient: DISPATCH_EMAIL,
-    });
-  } catch (error: any) {
-    console.error('Failed to process contact inquiry:', error);
-    res.status(500).json({ success: false, error: error.message || 'Internal server error' });
+      res.json({
+        success: true,
+        message: `Request successfully routed to ${DISPATCH_EMAIL}`,
+        ticketId: result.ticketId,
+        recipient: DISPATCH_EMAIL,
+      });
+    } catch (error: any) {
+      console.error('Failed to process request/query:', error);
+      res.status(error.statusCode || 500).json({ success: false, error: error.message || 'Internal server error' });
+    }
   }
-});
+);
 
 async function startServer() {
   const isProduction = process.env.NODE_ENV === 'production';
