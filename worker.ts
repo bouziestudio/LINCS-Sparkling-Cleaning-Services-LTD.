@@ -264,24 +264,9 @@ async function handleContactSubmission(request: Request, env: Env, pathname: str
   const cfUrl = `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(accountId)}/email/sending/send`;
 
   const cfPayload = {
-    personalizations: [
-      {
-        to: [
-          {
-            email: dispatchEmail,
-            name: 'LINCS Operations',
-          },
-        ],
-      },
-    ],
-    from: {
-      address: emailFrom,
-      name: 'LINCS Cleaning Website',
-    },
-    reply_to: {
-      address: email,
-      name: name,
-    },
+    from: emailFrom,
+    to: [dispatchEmail],
+    reply_to: email,
     subject: `[${prefix} #${ticketId}] from ${name} - LINCS Portal`,
     text: plainTextMessage,
   };
