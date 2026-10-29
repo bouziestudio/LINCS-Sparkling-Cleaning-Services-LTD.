@@ -52,7 +52,11 @@ export const Logo: React.FC<LogoProps> = ({
   }
 
   return (
-    <div className={`inline-flex flex-col select-none ${className}`}>
+    <div
+      className={`inline-flex flex-col select-none ${className}`}
+      title="LINCS Sparkilng Cleaning Services LTD"
+      aria-label="LINCS Sparkilng Cleaning Services LTD"
+    >
       <div className="flex items-center gap-0.5 tracking-tight font-black leading-none">
         {/* Letter L */}
         <span
@@ -137,7 +141,7 @@ export const Logo: React.FC<LogoProps> = ({
           style={{ color: limeColor }}
           className={`font-semibold tracking-[0.2em] uppercase font-sans mt-0.5 ${currentScale.subScale}`}
         >
-          Sparkling Cleaning Services Ltd
+          Sparkilng Cleaning Services LTD
         </span>
       )}
     </div>

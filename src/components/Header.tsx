@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={() => handleNav('home')}
             className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9fe81d] rounded-lg p-1 text-left transition-opacity hover:opacity-90"
-            aria-label="LINCS Sparkling Cleaning Home"
+            aria-label="LINCS Sparkilng Cleaning Services LTD Home"
           >
             <Logo theme="dark" size="md" />
           </button>

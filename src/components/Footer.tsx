@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({
             <button
               onClick={() => onNavigate('home')}
               className="text-left focus:outline-none"
-              aria-label="LINCS Home"
+              aria-label="LINCS Sparkilng Cleaning Services LTD Home"
             >
               <Logo theme="dark" size="md" />
             </button>
